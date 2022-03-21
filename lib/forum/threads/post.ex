@@ -4,7 +4,8 @@ defmodule Forum.Threads.Post do
 
   schema "posts" do
     field :content, :string
-    field :thread_id, :id
+
+    belongs_to :thread, Forum.Threads.Thread
 
     timestamps()
   end
@@ -12,7 +13,8 @@ defmodule Forum.Threads.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:content])
+    |> cast(attrs, [:content, :thread_id])
     |> validate_required([:content, :thread_id])
+    |> foreign_key_constraint(:thread_id)
   end
 end

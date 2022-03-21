@@ -12,6 +12,10 @@
     <%= label f, :content %>
     <%= textarea f, :content %>
     <%= error_tag f, :content %>
+
+    <%= label f, :thread_id %>
+    <%= text_input f, :thread_id %>
+    <%= error_tag f, :thread_id %>
   
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>
