@@ -46,3 +46,5 @@ My initial on scaling this are:
 - Paginate every page which have multiple items.
 - On the popular threads view, cache as much as possible. Things like: minimum posts to reach popular, thread which reached popularity threshold can all be cached using something like ETS.
 - Keeping the response time under 200ms or ideally 100ms.
+- Probably using k8s or libcluster to scale this.
+- The bottleneck might be on the database.
