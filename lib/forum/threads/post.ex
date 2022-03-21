@@ -4,7 +4,7 @@ defmodule Forum.Threads.Post do
 
   schema "posts" do
     field :content, :string
-    field :thread_is, :id
+    field :thread_id, :id
 
     timestamps()
   end
@@ -13,6 +13,6 @@ defmodule Forum.Threads.Post do
   def changeset(post, attrs) do
     post
     |> cast(attrs, [:content])
-    |> validate_required([:content])
+    |> validate_required([:content, :thread_id])
   end
 end
