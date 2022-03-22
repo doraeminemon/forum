@@ -33,12 +33,14 @@ Put extra thought into the Top 10 requirements. Note down how can you shape the 
 We will look for how the code is organized, best practices, data structures, and basic documentation about running the code (README.md), implementation details, and design choices. We would also like to see git commits and history as you think through the problem.
 
 ## Pages
-- Thread creation
-- Thread view
-- Post creation
-- Post view
-- Posts of thread view
-- Top 10 Popular thread
+- [x] Thread creation
+- [x] Thread view
+- [ ] Thread view pagination
+- [x] Post creation
+- [x] Post view
+- [x] Post view pagination
+- [ ] Posts of thread view
+- [ ] Top 10 Popular thread
 
 The main difficulty in these requirements is scaling with 10 popular threads and how to display it properly especially when there are cases with high traffic ( the posts and thread are constantly being updated and queried ) and how to scaling it properly as there are spike of high traffic.
 

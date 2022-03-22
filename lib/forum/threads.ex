@@ -117,6 +117,15 @@ defmodule Forum.Threads do
     Repo.all(Post)
   end
 
+  def list_posts(offset, limit) do
+    from(
+      u in Post,
+      offset: ^offset * 10,
+      limit: ^limit
+    )
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single post.
 
