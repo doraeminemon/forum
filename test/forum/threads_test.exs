@@ -75,10 +75,20 @@ defmodule Forum.ThreadsTest do
     end
 
     test "create_post/1 with valid data creates a post" do
-      valid_attrs = %{content: "some content"}
+      thread = thread_fixture()
+      valid_attrs = %{content: "some content", thread_id: thread.id}
 
       assert {:ok, %Post{} = post} = Threads.create_post(valid_attrs)
       assert post.content == "some content"
+    end
+
+    test "create_post/1 with a thread id increment the post counter" do
+      thread = thread_fixture()
+      valid_attrs = %{content: "some content", thread_id: thread.id}
+
+      assert {:ok, %Post{} = post} = Threads.create_post(valid_attrs)
+      thread = Threads.get_thread!(thread.id)
+      assert thread.post_counter == 1
     end
 
     test "create_post/1 with invalid data returns error changeset" do
@@ -99,15 +109,55 @@ defmodule Forum.ThreadsTest do
       assert post == Threads.get_post!(post.id)
     end
 
+    test "update_post/2 increment the new thread while decrement the old thread post counter" do
+      post = post_fixture()
+      thread_id = post.thread_id
+      new_thread = thread_fixture()
+
+      update_attrs = %{thread_id: new_thread.id}
+
+      assert {:ok, %Post{} = post} = Threads.update_post(post, update_attrs)
+      thread = Threads.get_thread!(thread_id)
+      assert thread.post_counter == 0
+      new_thread = Threads.get_thread!(new_thread.id)
+      assert new_thread.post_counter == 1
+    end
+
     test "delete_post/1 deletes the post" do
       post = post_fixture()
       assert {:ok, %Post{}} = Threads.delete_post(post)
       assert_raise Ecto.NoResultsError, fn -> Threads.get_post!(post.id) end
     end
 
+    test "delete_post/1 decrement the post counter" do
+      post = post_fixture()
+      thread_id = post.thread_id
+
+      thread = Threads.get_thread!(thread_id)
+      assert thread.post_counter == 1
+
+      assert {:ok, %Post{}} = Threads.delete_post(post)
+      thread = Threads.get_thread!(thread_id)
+      assert thread.post_counter == 0
+    end
+
     test "change_post/1 returns a post changeset" do
       post = post_fixture()
       assert %Ecto.Changeset{} = Threads.change_post(post)
+    end
+
+    test "get_popular_thread will get the 10 most popular thread" do
+      threads_fixture_with_random_counter(20)
+
+      popular_threads = Threads.list_popular_threads()
+
+      assert Enum.count(popular_threads) == 10
+      assert popular_threads
+        |> hd
+        |> Map.fetch(:post_counter) >
+        popular_threads
+        |> List.last()
+        |> Map.fetch(:post_counter)
     end
   end
 end

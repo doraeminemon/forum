@@ -4,13 +4,14 @@ defmodule ForumWeb.PostLiveTest do
   import Phoenix.LiveViewTest
   import Forum.ThreadsFixtures
 
-  @create_attrs %{content: "some content"}
+  @create_attrs %{content: "some content", thread_id: 1}
   @update_attrs %{content: "some updated content"}
   @invalid_attrs %{content: nil}
 
   defp create_post(_) do
     post = post_fixture()
-    %{post: post}
+    thread = thread_fixture()
+    %{post: post, thread: thread}
   end
 
   describe "Index" do
@@ -23,7 +24,7 @@ defmodule ForumWeb.PostLiveTest do
       assert html =~ post.content
     end
 
-    test "saves new post", %{conn: conn} do
+    test "saves new post", %{conn: conn, thread: thread} do
       {:ok, index_live, _html} = live(conn, Routes.post_index_path(conn, :index))
 
       assert index_live |> element("a", "New Post") |> render_click() =~
@@ -37,7 +38,7 @@ defmodule ForumWeb.PostLiveTest do
 
       {:ok, _, html} =
         index_live
-        |> form("#post-form", post: @create_attrs)
+        |> form("#post-form", post: %{ @create_attrs | thread_id: thread.id })
         |> render_submit()
         |> follow_redirect(conn, Routes.post_index_path(conn, :index))
 

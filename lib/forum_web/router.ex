@@ -28,8 +28,11 @@ defmodule ForumWeb.Router do
     live "/threads/new", ThreadLive.Index, :new
     live "/threads/:id/edit", ThreadLive.Index, :edit
 
+    live "/threads/popular", ThreadLive.Popular, :index
+
     live "/threads/:id", ThreadLive.Show, :show
     live "/threads/:id/show/edit", ThreadLive.Show, :edit
+
 
     get "/", PageController, :index
   end

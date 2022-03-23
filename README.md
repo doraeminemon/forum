@@ -40,7 +40,7 @@ We will look for how the code is organized, best practices, data structures, and
 - [x] Post view
 - [x] Post view pagination
 - [ ] Posts of thread view
-- [ ] Top 10 Popular thread
+- [x] Top 10 Popular thread
 
 The main difficulty in these requirements is scaling with 10 popular threads and how to display it properly especially when there are cases with high traffic ( the posts and thread are constantly being updated and queried ) and how to scaling it properly as there are spike of high traffic.
 

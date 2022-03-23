@@ -117,6 +117,15 @@ defmodule Forum.Threads do
     Repo.all(Post)
   end
 
+  def list_popular_threads do
+    from(
+      t in Thread,
+      order_by: [desc: :post_counter],
+      limit: 10
+    )
+    |> Repo.all
+  end
+
   def list_posts(offset, limit) do
     from(
       u in Post,
@@ -155,9 +164,20 @@ defmodule Forum.Threads do
 
   """
   def create_post(attrs \\ %{}) do
+    maybe_increment_post_counter(attrs)
     %Post{}
     |> Post.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def maybe_increment_post_counter(attrs) do
+    if Map.has_key?(attrs, :thread_id) do
+      current_thread = get_thread!(attrs.thread_id)
+
+      current_thread
+      |> Thread.changeset(%{ post_counter: current_thread.post_counter + 1 })
+      |> Repo.update()
+    end
   end
 
   @doc """
@@ -173,9 +193,22 @@ defmodule Forum.Threads do
 
   """
   def update_post(%Post{} = post, attrs) do
+    maybe_increment_post_counter(attrs)
+    maybe_decrement_post_counter(post)
+
     post
     |> Post.changeset(attrs)
     |> Repo.update()
+  end
+
+  def maybe_decrement_post_counter(post) do
+    if Map.has_key?(post, :thread_id) do
+      current_thread = get_thread!(post.thread_id)
+
+      current_thread
+      |> Thread.changeset(%{ post_counter: current_thread.post_counter - 1 })
+      |> Repo.update()
+    end
   end
 
   @doc """
@@ -191,6 +224,7 @@ defmodule Forum.Threads do
 
   """
   def delete_post(%Post{} = post) do
+    maybe_decrement_post_counter(post)
     Repo.delete(post)
   end
 

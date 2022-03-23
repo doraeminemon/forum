@@ -4,6 +4,7 @@ defmodule Forum.Threads.Thread do
 
   schema "threads" do
     field :title, :string
+    field :post_counter, :integer, default: 0
 
     timestamps()
   end
@@ -11,7 +12,7 @@ defmodule Forum.Threads.Thread do
   @doc false
   def changeset(thread, attrs) do
     thread
-    |> cast(attrs, [:title])
+    |> cast(attrs, [:title, :post_counter])
     |> validate_required([:title])
   end
 end

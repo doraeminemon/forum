@@ -1,0 +1,25 @@
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+
+      <th>Link</th>
+      <th>Number of posts</th>
+    </tr>
+  </thead>
+  <tbody id="threads">
+    <%= for thread <- @threads do %>
+      <tr id={"thread-#{thread.id}"}>
+        <td><%= thread.title %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.thread_show_path(@socket, :show, thread) %></span>
+        </td>
+
+        <td>
+          <%= thread.post_counter %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
