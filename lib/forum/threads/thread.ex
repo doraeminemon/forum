@@ -6,6 +6,7 @@ defmodule Forum.Threads.Thread do
     field :title, :string
     field :post_counter, :integer, default: 0
 
+    has_many :posts, Forum.Threads.Post
     timestamps()
   end
 

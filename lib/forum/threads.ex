@@ -18,7 +18,9 @@ defmodule Forum.Threads do
 
   """
   def list_threads do
-    Repo.all(Thread)
+    Thread
+    |> Repo.all()
+    |> Repo.preload(:posts)
   end
 
   @doc """

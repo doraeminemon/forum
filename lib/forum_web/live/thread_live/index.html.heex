@@ -18,18 +18,28 @@
     <tr>
       <th>Title</th>
 
-      <th></th>
+      <th>Actions</th>
+      <th>Posts</th>
     </tr>
   </thead>
   <tbody id="threads">
     <%= for thread <- @threads do %>
       <tr id={"thread-#{thread.id}"}>
-        <td><%= thread.title %></td>
+        <td style="display: flex; "><%= thread.title %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.thread_show_path(@socket, :show, thread) %></span>
-          <span><%= live_patch "Edit", to: Routes.thread_index_path(@socket, :edit, thread) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: thread.id, data: [confirm: "Are you sure?"] %></span>
+          <div><%= live_redirect "Show", to: Routes.thread_show_path(@socket, :show, thread) %></div>
+          <div><%= live_patch "Edit", to: Routes.thread_index_path(@socket, :edit, thread) %></div>
+          <div><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: thread.id, data: [confirm: "Are you sure?"] %></div>
+        </td>
+
+        <td>
+          <%= for post <- thread.posts do %>
+            <div>
+              <span><%= post.id %></span>
+              <%= String.slice(post.content, 1..15) %>
+            </div>
+          <% end %>
         </td>
       </tr>
     <% end %>
