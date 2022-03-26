@@ -7,8 +7,9 @@ defmodule ForumWeb.PostLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     socket = socket
-    |> assign(:page, 0)
-    |> assign(:posts, list_posts(0))
+    |> assign(:page, 1)
+    |> assign(:total, Threads.get_posts_count())
+    |> assign(:posts, list_posts(1))
 
     {:ok, socket}
   end
@@ -16,8 +17,8 @@ defmodule ForumWeb.PostLive.Index do
   @impl true
   def handle_params(%{ "page" => page }, _url, socket) do
     socket = socket
-      |> assign(:page, page)
-      |> assign(:posts, list_posts(page))
+      |> assign(:page, String.to_integer(page))
+      |> assign(:posts, list_posts(String.to_integer(page)))
     {:noreply, socket}
   end
 
@@ -52,6 +53,6 @@ defmodule ForumWeb.PostLive.Index do
   end
 
   defp list_posts(page) do
-    Threads.list_posts(page, 10)
+    Threads.list_posts(page - 1, 10)
   end
 end

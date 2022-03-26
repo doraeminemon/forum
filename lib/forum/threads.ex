@@ -8,6 +8,8 @@ defmodule Forum.Threads do
 
   alias Forum.Threads.Thread
 
+  @page_size 10
+
   @doc """
   Returns the list of threads.
 
@@ -21,6 +23,32 @@ defmodule Forum.Threads do
     Thread
     |> Repo.all()
     |> Repo.preload(:posts)
+  end
+
+  @doc """
+  Return all the threads paginated with the related posts preloaded.
+  """
+  @spec list_threads(integer(), integer()) :: list(Thread.t())
+  def list_threads(offset, limit) do
+    from(
+      t in Thread,
+      offset: ^offset * @page_size,
+      limit: ^limit
+    )
+    |> Repo.all()
+    |> Repo.preload(:posts)
+  end
+
+  @doc """
+  Return total amount of threads
+  """
+  @spec get_total_threads() :: integer()
+  def get_total_threads() do
+    from(
+      t in Thread,
+      select: count(t.id)
+    )
+    |> Repo.one!()
   end
 
   @doc """
@@ -119,22 +147,43 @@ defmodule Forum.Threads do
     Repo.all(Post)
   end
 
+  @doc """
+  List all the most popular thread order by their posts count. The post count is cache whenever
+  the post related to thread is being modified
+  """
+  @spec list_popular_threads() :: list(Thread.t())
   def list_popular_threads do
     from(
       t in Thread,
       order_by: [desc: :post_counter],
-      limit: 10
+      limit: @page_size
     )
     |> Repo.all
   end
 
+  @doc """
+  List posts for pagination with offset and limit
+  """
+  @spec list_posts(offset :: integer(), limit :: integer()) :: list(Post.t())
   def list_posts(offset, limit) do
     from(
-      u in Post,
-      offset: ^offset * 10,
+      p in Post,
+      offset: ^offset * @page_size,
       limit: ^limit
     )
     |> Repo.all()
+  end
+
+  @doc """
+  Return total amount of posts
+  """
+  @spec get_posts_count() :: integer()
+  def get_posts_count() do
+    from(
+      p in Post,
+      select: count(p.id)
+    )
+    |> Repo.one!()
   end
 
   @doc """

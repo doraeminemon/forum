@@ -35,18 +35,26 @@ We will look for how the code is organized, best practices, data structures, and
 ## Pages
 - [x] Thread creation
 - [x] Thread view
-- [ ] Thread view pagination
+- [x] Thread view pagination
 - [x] Post creation
 - [x] Post view
 - [x] Post view pagination
-- [ ] Posts of thread view
+- [x] Posts of thread view
 - [x] Top 10 Popular thread
 
 The main difficulty in these requirements is scaling with 10 popular threads and how to display it properly especially when there are cases with high traffic ( the posts and thread are constantly being updated and queried ) and how to scaling it properly as there are spike of high traffic.
 
 My initial on scaling this are:
 - Paginate every page which have multiple items.
-- On the popular threads view, cache as much as possible. Things like: minimum posts to reach popular, thread which reached popularity threshold can all be cached using something like ETS.
+- On the popular threads view, cache as much as possible. Things like: posts count ( related to a thread )
 - Keeping the response time under 200ms or ideally 100ms.
 - Probably using k8s or libcluster to scale this.
 - The bottleneck might be on the database.
+- A common problem on social network website might be n+1 query problem. Kinda being easily solved in Ecto using Repo.preload.
+
+Solution to a few problem when serving page at scale:
+- Listing multiple items: pagination
+- Listing multiple items with relation that cause n+1 query: Repo.preload
+- Running aggregation query like count on popular posts: Using a normalized field like post_counter to allow quick ordering.
+- Even faster page load: cache relevant queries when there are query with the same params.
+- Auto scaling: with this setup, the database is probably need to be a cluster with multiple read-only instances since the read queries is probably way more than create / update query.

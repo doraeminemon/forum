@@ -25,7 +25,9 @@
   <tbody id="threads">
     <%= for thread <- @threads do %>
       <tr id={"thread-#{thread.id}"}>
-        <td style="display: flex; "><%= thread.title %></td>
+        <td>
+          <%= thread.title %>
+        </td>
 
         <td>
           <div><%= live_redirect "Show", to: Routes.thread_show_path(@socket, :show, thread) %></div>
@@ -37,7 +39,7 @@
           <%= for post <- thread.posts do %>
             <div>
               <span><%= post.id %></span>
-              <%= String.slice(post.content, 1..15) %>
+              <%= String.slice(post.content, 0..15) %>
             </div>
           <% end %>
         </td>
@@ -45,5 +47,19 @@
     <% end %>
   </tbody>
 </table>
+<div style="paginate">
+  <span>
+    <%= if @page > 1 do %>
+      <%= live_patch "Previous", to: Routes.thread_index_path(@socket, :index, page: @page - 1) %>
+    <% end %>
+  </span>
+  <span>Page:<%= @page %></span>
+  <span>
+    <%= if @page < @total / 10 do %>
+      <%= live_patch "Next", to: Routes.thread_index_path(@socket, :index, page: @page + 1) %>
+    <% end %>
+  </span>
+</div>
+
 
 <span><%= live_patch "New Thread", to: Routes.thread_index_path(@socket, :new) %></span>

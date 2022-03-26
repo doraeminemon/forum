@@ -6,10 +6,21 @@ defmodule ForumWeb.ThreadLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :threads, list_threads())}
+    socket = socket
+      |> assign(:page, 1)
+      |> assign(:total, Threads.get_total_threads())
+      |> assign(:threads, list_threads(1))
+    {:ok, socket}
   end
 
   @impl true
+  def handle_params(%{ "page" => page }, _url, socket) do
+    socket = socket
+      |> assign(:page, String.to_integer(page))
+      |> assign(:threads, list_threads(String.to_integer(page)))
+    {:noreply, socket}
+  end
+
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
@@ -37,10 +48,10 @@ defmodule ForumWeb.ThreadLive.Index do
     thread = Threads.get_thread!(id)
     {:ok, _} = Threads.delete_thread(thread)
 
-    {:noreply, assign(socket, :threads, list_threads())}
+    {:noreply, assign(socket, :threads, list_threads(socket.assigns.page))}
   end
 
-  defp list_threads do
-    Threads.list_threads()
+  defp list_threads(page) do
+    Threads.list_threads(page - 1, 10)
   end
 end

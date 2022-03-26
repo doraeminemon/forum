@@ -118,3 +118,28 @@
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  font-size: 1em;
+}
+td.content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 32em;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+td {
+  vertical-align: top;
+}
+
+.paginate {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
