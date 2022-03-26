@@ -11,7 +11,7 @@ defmodule Forum.ThreadsFixtures do
     {:ok, thread} =
       attrs
       |> Enum.into(%{
-        title: "some title"
+        title: "some title",
       })
       |> Forum.Threads.create_thread()
 

@@ -222,8 +222,10 @@ defmodule Forum.Threads do
   end
 
   def maybe_increment_post_counter(attrs) do
-    if Map.has_key?(attrs, :thread_id) do
-      current_thread = get_thread!(attrs.thread_id)
+    if Map.has_key?(attrs, "thread_id") do
+      current_thread = attrs["thread_id"]
+      |> String.to_integer()
+      |> get_thread!()
 
       current_thread
       |> Thread.changeset(%{ post_counter: current_thread.post_counter + 1 })

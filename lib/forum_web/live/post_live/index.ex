@@ -49,7 +49,7 @@ defmodule ForumWeb.PostLive.Index do
     post = Threads.get_post!(id)
     {:ok, _} = Threads.delete_post(post)
 
-    {:noreply, assign(socket, :posts, list_posts(0))}
+    {:noreply, assign(socket, :posts, list_posts(1))}
   end
 
   defp list_posts(page) do
