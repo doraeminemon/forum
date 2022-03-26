@@ -35,11 +35,11 @@
           <div><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: thread.id, data: [confirm: "Are you sure?"] %></div>
         </td>
 
-        <td>
+        <td class="content">
           <%= for post <- thread.posts do %>
             <div>
               <span><%= post.id %></span>
-              <%= String.slice(post.content, 0..15) %>
+              <%= post.content %>
             </div>
           <% end %>
         </td>
