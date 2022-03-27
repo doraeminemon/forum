@@ -15,5 +15,6 @@ defmodule Forum.Threads.Thread do
     thread
     |> cast(attrs, [:title, :post_counter])
     |> validate_required([:title])
+    |> validate_length(:title, max: 140, min: 1)
   end
 end
