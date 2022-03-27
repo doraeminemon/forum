@@ -33,8 +33,7 @@ defmodule ForumWeb.Router do
     live "/threads/:id", ThreadLive.Show, :show
     live "/threads/:id/show/edit", ThreadLive.Show, :edit
 
-
-    get "/", PageController, :index
+    live "/", ThreadLive.Popular, :index
   end
 
   # Other scopes may use custom stacks.
