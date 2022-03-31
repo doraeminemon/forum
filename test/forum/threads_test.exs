@@ -11,7 +11,7 @@ defmodule Forum.ThreadsTest do
     @invalid_attrs %{title: nil}
 
     test "list_threads/0 returns all threads" do
-      thread = thread_fixture()
+      thread = thread_fixture() |> Forum.Repo.preload(:posts)
       assert Threads.list_threads() == [thread]
     end
 
@@ -76,7 +76,7 @@ defmodule Forum.ThreadsTest do
 
     test "create_post/1 with valid data creates a post" do
       thread = thread_fixture()
-      valid_attrs = %{content: "some content", thread_id: thread.id}
+      valid_attrs = %{"content" => "some content", "thread_id" => "#{thread.id}"}
 
       assert {:ok, %Post{} = post} = Threads.create_post(valid_attrs)
       assert post.content == "some content"
@@ -84,7 +84,7 @@ defmodule Forum.ThreadsTest do
 
     test "create_post/1 with a thread id increment the post counter" do
       thread = thread_fixture()
-      valid_attrs = %{content: "some content", thread_id: thread.id}
+      valid_attrs = %{"content" => "some content", "thread_id" => "#{thread.id}"}
 
       assert {:ok, %Post{} = post} = Threads.create_post(valid_attrs)
       thread = Threads.get_thread!(thread.id)
@@ -114,7 +114,7 @@ defmodule Forum.ThreadsTest do
       thread_id = post.thread_id
       new_thread = thread_fixture()
 
-      update_attrs = %{thread_id: new_thread.id}
+      update_attrs = %{"thread_id" => "#{new_thread.id}"}
 
       assert {:ok, %Post{} = post} = Threads.update_post(post, update_attrs)
       thread = Threads.get_thread!(thread_id)

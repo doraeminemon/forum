@@ -31,8 +31,8 @@ defmodule Forum.ThreadsFixtures do
     {:ok, post} =
       attrs
       |> Enum.into(%{
-        content: "some content",
-        thread_id: thread.id
+        "content" => "some content",
+        "thread_id" => "#{thread.id}"
       })
       |> Forum.Threads.create_post()
 
